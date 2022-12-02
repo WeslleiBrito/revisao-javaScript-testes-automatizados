@@ -176,21 +176,32 @@ function retornaArrayOrdenadoAlfabeticamente(consultas) {
 
 // EXERCÍCIO 15B
 function retornaArrayOrdenadoPorData(consultas) {
-    const datas = consultas.map((objeto) => new Date(`${objeto.dataDaConsulta.slice(-4)}-${objeto.dataDaConsulta.slice(-7, -5)}-${objeto.dataDaConsulta.slice(0, 2)}`)).sort()
-    return datas
+    let data
+    let datas = []
+    const novaConsulta = []
+    let dataString
+    let dataVerifica
+    let nomesJaInseridos = []
+
+    for (let consulta of consultas) {
+        data = consulta.dataDaConsulta
+        data = new Date(`${data.slice(-4)}-${data.slice(-7, -5)}-${data.slice(0, 2)}`)
+        datas.push(data.getTime())
+    }
+
+    datas = datas.sort((a, b) => a - b)
+
+    for (let data of datas) {
+        for (let consulta of consultas) {
+            dataString = `${consulta.dataDaConsulta.slice(-4)}-${consulta.dataDaConsulta.slice(-7, -5)}-${consulta.dataDaConsulta.slice(0, 2)}`
+            dataVerifica = new Date(dataString)
+            if (dataVerifica.getTime() === data && !nomesJaInseridos.includes(consulta.nome)) {
+                novaConsulta.push(consulta)
+                nomesJaInseridos.push(consulta.nome)
+
+            }
+        }
+    }
+
+    return novaConsulta
 }
-
-const dataInicial = new Date('2022-10-01')
-const dataFinal = new Date('2022-11-20')
-
-console.log(dataFinal > dataInicial ? 'A data final é maior que a data inicial' : 'A data inicial é maior que a data final')
-
-const datas = [
-    { nome: "João", dataDaConsulta: "01/10/2021" },
-    { nome: "Pedro", dataDaConsulta: "02/07/2021" },
-    { nome: "Paula", dataDaConsulta: "03/11/2021" },
-    { nome: "Márcia", dataDaConsulta: "04/05/2021" }
-]
-
-
-console.log(retornaArrayOrdenadoPorData(datas))
